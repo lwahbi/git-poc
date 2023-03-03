@@ -1,0 +1,286 @@
+// intallation https://git-scm.com/download/win
+
+pwd // rep courant
+
+-- configuration 
+git config --global user.name "lotfi"
+git config --global user.email "lwahbi@gmail.com"
+git config --global --list   // affichage de la conf
+
+
+
+///// creation d un dépot
+
+mkdir tp_git (Cest mon repo == Master)
+mkdir monsiteweb
+git init
+ls -la  // affichage dossier cacher
+
+////
+
+git status // les etats du repo
+
+// indexation
+git add hello.html style.css// indexation
+gut add . // ajout de tt les modificatuon
+git reset style.css// indexation
+
+
+
+git restore hello.html // pour annumer les modification faites sur le fichier
+
+
+// enregistrement ds le repo local
+git commit -m " mon message"
+
+// si modification et pour les visualiser
+git diff
+// pour voir les modification apporté au fichier cacher
+git diff --cached
+
+
+/// list des comit
+git log
+git log -2
+
+// visualisation d un commit
+git show 03b736c85648820240405be35675354b18289c86
+
+// visuaisation du commit sur le quel point un tag 
+
+git show master
+
+
+!!!!!!!!!!!!!! navigation dans l historique et donc deplacre le tag
+
+git log  (affiche sur qoui point le head)
+git checkout 03b736c85648820240405be35675354b18289c86
+git checkout master (pour revenir sur le dernier commit)
+
+
+!!!!!!!!! utilisation des tag
+git log // affiche la liste des commit
+git checkout SHA-1 pour se deplacer sur un commit
+/// creation et suppression d un tag:     git tag toto et  git tag -- delete toto
+git tag MON_SAITE_V1 -m "la premire version du site" // cerer un tag qui point sur ce commit apres le checkout
+
+git tag // pour afficher la liste des tag on deux MON_SAITE_V1 et MON_SAITE_V2
+git push origin MON_SAITE_V1 // pour pousser ce tag
+git push --tags // pour posser tt les tag (par default il sait qu on pousse sur origin)
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 1 ajout d un nouveau rep à github //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+git init
+git add .
+git commit -m "first commit"
+git remote add origin https://github.com/lwahbi/poc-springboot-microservices.git
+git push -u origin master
+
+
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 2 ajout d un nouveau rep à github //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+creer le reposotary distant sur git hub
+se positionner au meme niveau que le dossier mon_site_web/ et lancer gitaBsh  
+git clone https://github.com/lwahbi/mon-site-web.git clone_mon_site_web/ (si on tape rien git par default va utiliser mon-site-web )
+
+/// ou avec cette facon
+git remote add origin https://github.com/lwahbi/mon-site-web.git
+git pull origin master
+
+////// ici no deux repo mon_site_web et clone_mon_site_web points tt deux sur le repo distant
+ 
+cd clone_mon_site_web/ // un nouceau rep
+git config user.name "clone" // pour identifier avec quel local repo on a modifier notre projet
+
+git remote -v // acffichage de la liste des remote
+git remote show origin // affuchage des info complementaire de repo distant
+
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// Etape 3 : pousser les modif à github //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+/// se positionner sur sur mon-site-web
+git push -u origin master  // ne pousse que les commit mais pas le tag dèja créer
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// Etape 4 : recupperer les modif depuis github //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+git fetch (recupere le dernier commit sur le remote et deplace origin/master sur le dernier commit du remote rep)
+git pull origin master ( recupere le dernier commit sur le remote et deplace origin/master et master sur le dernier commit du remote rep)
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 5 :  travailler en equipe //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+git blame -L 1,100 hello.html 
+	2b4202a4 (lotfi wahbi 2023-02-18 09:25:37 +0100 21)    <p>walou 2</p>   : modification via le sha1 2b4202a4
+	^1ada0d2 (lotfi wahbi 2023-02-18 08:58:22 +0100 22)    </div>			  : c est lepremier commmit car chapo
+	
+	
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 6 :  sauvegarder de coté des modification //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+git stash save "modification git ignore"
+git stash list
+git stash show 0 // fisualisation du stash à l index 0
+git stash pop 0
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 7 :  merge  d un  fichier .gitignore //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+git stash
+git pull
+git stash pop // recupere le dernier stash cad à l index 0
+
+//// realiser le merge manue
+git add .gitignore
+git commit -m "exclusion fichier txt"
+git push
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 8 :  merge  d un  commit //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+***************** sans rebase == probleme dans la lecture car des index sont pas bien posotionner
+
+git pull
+// merge manuel du fichier
+// Hp@DESKTOP-B0B5C2P MINGW64 /d/Developpement/Formation/git/tp-git/clone_mon_site_web (master|MERGING)  ## signifie qu pn est sur le master et on fait un merge
+
+
+git mege --abort // son on veut revenir à l etat avant le pull
+
+
+***************** AVEC rebase : permet de ne pas poluer l historique avec des commit de merge
+git pull --rebase
+
+
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 9 :  les branches //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////    creation de branche ////////////////////////////////////////
+git branch BRANCHE_A_MERGE // creation de la branches
+git branch // liste des branches
+git checkout BRANCHE_A_MERGE  (git switch BRANCHE_A_MERGE) // pour se deplacer sur la branche
+git add .
+git commit -m "ajot de la commande git push"
+// a ce stade on peut pas faire un push car notre branche est uniquement en local 
+git push // ne marche pas erreur
+git push --set-upstream origin BRANCHE_A_MERGE // ici pn cer un lien sur le serveur distant 
+												// (pour les modif qui suivent il suffit de faire un git push car le leien exist)
+ 
+/////////////////////////////////   recuperation de branche /////////////////////////////////////
+
+
+git branch -a // affichage de tt les branche y compris distante
+git checkout BRANCHE_A_MERGE // recuperation de la branche et ceration d une copie en local
+
+/////////////////////////////////   Appliquer sur une branche 1 un commit d une branche 2 /////////////////////////////////////
+
+git log // affiche les commit de la branche master sur laquelle on est
+git log BRANCHE_A_MERGE // pour avoir les commits de cette branche eouis master
+git cherry-pick sha-1 // recuperation d un commit de cette branche
+git log // on voit bien que le commit est ajouter au debut des commit
+
+/////////////////////////////////   merge entre deux branches /////////////////////////////////////
+
+git merge BRANCHE_A_MERGE // je suis sur master et je veux merger cette branche, resoudre les conflits manuellement si besoin
+git add .
+git commit -m "message"
+git push
+
+/////////////////////////////////   rebase (pour fusioner deux branche)  /////////////////////////////////////
+
+1 : se positionner sure la nranche qu on veut ramener
+git rebase master // deplace l ensemble des commit sur le master
+
+2 : se deplacer sur le master 
+git merge BRANCHE_A_MERGE  // ici on ramene la branche sur le master 
+
+// excercie 
+git switch -c sha-1 // ici on se deplace sur le commit et on cerer une branche
+// modification des fichiers dans notre branche 
+git add .
+git commit
+
+// une fois on termine nos dev on souhaite ramener nos modif sur le master en local
+git rebase master
+// si on a des conflis par exemple dans hello.html == respudre les prb manuellement
+git add helo.html // pour indexer ,nes modification
+git rebase --continue // ici A - B - C -D
+git checkout master // se positionner sur le master
+ // merge de la branche BRANCHE_A_REBASE dans notre master pour que tt les modif appliqué dans la branche soit dans le master
+
+
+/////////////////////////////////   suppression d une branche  /////////////////////////////////////
+git branch BRANCHE_A_SUPPRIMER
+git checkout BRANCHE_A_SUPPRIMER
+// modification de hello.html
+git add hello.html
+git commit
+git push --set-upstream origin BRANCHE_A_SUPPRIMER // mnt la branche et creer dans le rep distant
+
+// pour supprimer la branche il ne faut pas etre positionner sur la branche
+git checkout master
+git branch -d BRANCHE_A_SUPPRIMER
+git branch -a // pour voir ce qui se passe sur le serveur , ici on voit bien que la branche est supprimer qu on local
+git push origin --delete BRANCHE_A_SUPPRIMER // ici suppressiond e la branche distante
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 10 :  les commit orphelin : cad sans réference (dans le cas d un rebase / merge de branche) //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+HEAD : pointe sur le commit / branche courante
+ORIG_HEAD : la position precedente du HEAD (cerrer quand on fait un rebase ou certain autre commande dangeureuse)
+			permet de trouver les commit orphelin
+			
+git reflog -4			// pile qui affiche l ensembles des reference de HEAD (permet de trouver les commit orphelin)
+						// ici les 4 dernier
+
+git log --graph --all --reflog
+// ou mieux
+gitk --all --reflog
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////   git reset  ////////////////////////////////
+git commit -- amend // cree un commit orphelin 
+git reset // permet de deplasser le pointeur (master - haed) sur un commit et danc les D et C seront orphelin
+git reset --hard // desindex ce qui est sur la zonne d index et supprime tt ce qui n est pas commité
+
+
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/////////////////// cas 1A :  les hooks : des script automatique executer par git //////////////////
+/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
